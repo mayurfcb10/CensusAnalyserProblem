@@ -16,7 +16,7 @@ public class CensusAnalyser {
 	}
 
 	public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
-		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));){
+		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
 			CsvToBeanBuilder<IndiaCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
 			csvToBeanBuilder.withType(IndiaCensusCSV.class);
 			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
@@ -25,12 +25,30 @@ public class CensusAnalyser {
 			Iterable<IndiaCensusCSV> csvIterable = () -> censusCSVIterator;
 			int numOfEnteries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
 			return numOfEnteries;
-		}catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
+			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+		} catch (IOException | RuntimeException e) {
 			throw new CensusAnalyserException(e.getMessage(),
-					CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-		}catch (IOException | RuntimeException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        }
+					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+		}
+	}
+
+	public int loadIndianStateCode(String csvFilePath) throws CensusAnalyserException {
+		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
+			CsvToBeanBuilder<CSVStates> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+			csvToBeanBuilder.withType(CSVStates.class);
+			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+			CsvToBean<CSVStates> csvToBean = csvToBeanBuilder.build();
+			Iterator<CSVStates> stateCSVIterator = csvToBean.iterator();
+			Iterable<CSVStates> csvIterable = () -> stateCSVIterator;
+			int numOfEnteries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+			return numOfEnteries;
+		} catch (IllegalStateException e) {
+			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+		} catch (IOException | RuntimeException e) {
+			throw new CensusAnalyserException(e.getMessage(),
+					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+		}
+
 	}
 }
