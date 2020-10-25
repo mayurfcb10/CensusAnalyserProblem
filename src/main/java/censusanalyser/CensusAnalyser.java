@@ -1,14 +1,14 @@
 package censusanalyser;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.stream.StreamSupport;
+import com.bridgelabz.censusanalyser.*;
+
+//import com.bridgelabz.censusanalyser.*;
 
 public class CensusAnalyser {
 	public void welcomeMessage() {
@@ -20,7 +20,7 @@ public class CensusAnalyser {
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
 			Iterator<IndiaCensusCSV> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, IndiaCensusCSV.class);
 			return getNumOfEntries(censusCSVIterator);
-		} catch (IOException e) {
+		} catch (IOException | CSVBuilderException e) {
 			throw new CensusAnalyserException(e.getMessage(),
 					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
 		}
@@ -31,7 +31,7 @@ public class CensusAnalyser {
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
 			Iterator<IndiaCensusCSV> stateCSVIterator = csvBuilder.getCSVFileIterator(reader, CSVStates.class);
 			return getNumOfEntries(stateCSVIterator);
-		} catch (IOException e) {
+		} catch (IOException | CSVBuilderException e) {
 			throw new CensusAnalyserException(e.getMessage(),
 					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
 		}

@@ -101,7 +101,7 @@ public class CensusAnalyserTest {
 			Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
 		}
 	}
-	
+
 	@Test
 	public void givenIndiaStateCode_WithCorrectPath_WrongFileType_ShouldThrowException() {
 		try {
@@ -113,7 +113,7 @@ public class CensusAnalyserTest {
 			Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
 		}
 	}
-	
+
 	@Test
 	public void givenIndiaStateCode_WithCorrectPath_RemovedDelimeter_ShouldThrowException() {
 		try {
@@ -125,7 +125,7 @@ public class CensusAnalyserTest {
 			Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
 		}
 	}
-	
+
 	@Test
 	public void givenIndianStateCodeData_WithCorrectPath_WrongHeader_ShouldThrowException() {
 		try {
