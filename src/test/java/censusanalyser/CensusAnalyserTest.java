@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.google.gson.Gson;
+
 public class CensusAnalyserTest {
 	private static final String INDIA_CENSUS_CSV_FILE_PATH = "./src/test/resources/IndiaStateCensusData.csv";
 	private static final String WRONG_CSV_FILE_PATH = "./src/main/resources/IndiaStateCensusData.csv";
@@ -180,7 +182,34 @@ public class CensusAnalyserTest {
 	            exceptionRule.expect(CensusAnalyserException.class);
 	            censusAnalyser.loadIndiaStateOrCensusDataUsingCommonsCSV(WRONG_DELIMITER_PATH);
 	        } catch (CensusAnalyserException e) {
-	            Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
+	            Assert.assertEquals(CensusAnalyserException.ExceptionType.HEADER_DELIMETER_PROBLEM, e.type);
+	        }
+	    }
+	    
+	    @Test
+	    public void giveIndianCensusDataWhenSortOnStateShouldReturnSortedResult() {
+	        try {
+	            CensusAnalyser censusAnalyser = new CensusAnalyser();
+	            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+	            String sortCensusData = censusAnalyser.SortedStateWiseCensusData();
+	            IndiaCensusCSV[] indiaCensusCSV = new Gson().fromJson(sortCensusData, IndiaCensusCSV[].class);
+	            Assert.assertEquals("Andhra Pradesh", indiaCensusCSV[0].state);
+	        } catch (CensusAnalyserException e) {
+	            e.printStackTrace();
+
+	        }
+	    }
+	    
+	    @Test
+	    public void giveIndianCensusDataWhenSortOnStateShouldReturnExpectedSortedResult() {
+	        try {
+	            CensusAnalyser censusAnalyser = new CensusAnalyser();
+	            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+	            String sortCensusData = censusAnalyser.SortedStateWiseCensusData();
+	            IndiaCensusCSV[] indiaCensusCSV = new Gson().fromJson(sortCensusData, IndiaCensusCSV[].class);
+	            Assert.assertEquals("West Bengal", indiaCensusCSV[indiaCensusCSV.length - 1].state);
+	        } catch (CensusAnalyserException e) {
+	            e.printStackTrace();
 	        }
 	    }
 }
